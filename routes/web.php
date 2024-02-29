@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\HelloController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
@@ -23,10 +24,16 @@ Route::get('/', [WelcomeController::class, 'index']);
 Route::get('/hello', [HelloController::class, 'show']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::resource('products', ProductController::class);
+    Route::middleware(['can:isAdmin'])->group(function () {
+        Route::get('/products/{product}/download', [ProductController::class, 'downloadImage'])->name('products.downloadImage');
+        Route::resource('products', ProductController::class);
 
-    Route::get('/users/list', [UserController::class, 'index']);
-    Route::delete('/users/{user}', [UserController::class, 'destroy']);
+        Route::get('/users/list', [UserController::class, 'index']);
+        Route::delete('/users/{user}', [UserController::class, 'destroy']);
+    });
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/{product}', [CartController::class, 'store'])->name('cart.store');
+    Route::delete('/cart/{product}', [CartController::class, 'destroy'])->name('cart.destroy');
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 });
 

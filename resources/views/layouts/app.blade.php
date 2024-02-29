@@ -15,6 +15,7 @@
     <!-- W głowie dokumentu -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
+    @yield('css-files')
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -61,9 +62,11 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="/users/list">Użytkownicy</a>
-                                <a class="dropdown-item"
-                                   href="{{ route('products.index') }}">{{ __('shop.welcome.products') }}</a>
+                                @can('isAdmin')
+                                    <a class="dropdown-item" href="/users/list">Użytkownicy</a>
+                                    <a class="dropdown-item" href="{{ route('products.index') }}">{{ __('shop.welcome.products') }}</a>
+                                @endcan
+                                <a class="dropdown-item" href="{{ route('cart.index') }}">Koszyk</a>
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

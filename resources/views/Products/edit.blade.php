@@ -14,7 +14,8 @@
                             @csrf
 
                             <div class="row mb-3">
-                                <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('shop.product.fields.name') }}</label>
+                                <label for="name"
+                                       class="col-md-4 col-form-label text-md-end">{{ __('shop.product.fields.name') }}</label>
 
                                 <div class="col-md-6">
                                     <input id="name" type="text" maxlength="200"
@@ -30,7 +31,8 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label for="description" class="col-md-4 col-form-label text-md-end">{{ __('shop.product.fields.description') }}</label>
+                                <label for="description"
+                                       class="col-md-4 col-form-label text-md-end">{{ __('shop.product.fields.description') }}</label>
 
                                 <div class="col-md-6">
                                     <textarea id="description" maxlength="600"
@@ -46,7 +48,8 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label for="amount" class="col-md-4 col-form-label text-md-end">{{ __('shop.product.fields.amount') }}</label>
+                                <label for="amount"
+                                       class="col-md-4 col-form-label text-md-end">{{ __('shop.product.fields.amount') }}</label>
 
                                 <div class="col-md-6">
                                     <input id="amount" type="number" min="0"
@@ -62,7 +65,8 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label for="price" class="col-md-4 col-form-label text-md-end">{{ __('shop.product.fields.price') }}</label>
+                                <label for="price"
+                                       class="col-md-4 col-form-label text-md-end">{{ __('shop.product.fields.price') }}</label>
 
                                 <div class="col-md-6">
                                     <input id="price" type="number" step="0.01" min="0"
@@ -78,13 +82,17 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label for="category" class="col-md-4 col-form-label text-md-end">{{ __('shop.product.fields.category') }}</label>
+                                <label for="category"
+                                       class="col-md-4 col-form-label text-md-end">{{ __('shop.product.fields.category') }}</label>
 
                                 <div class="col-md-6">
-                                    <select id="category" class="form-control @error('category_id') is-invalid @enderror" name="category_id">
+                                    <select id="category"
+                                            class="form-control @error('category_id') is-invalid @enderror"
+                                            name="category_id">
                                         <option value="">Brak</option>
                                         @foreach($categories as $category)
-                                            <option value="{{ $category->id }}" @if($product->isSelectedCategory($category->id)) selected @endif>{{ $category->name }}</option>
+                                            <option value="{{ $category->id }}"
+                                                    @if($product->isSelectedCategory($category->id)) selected @endif>{{ $category->name }}</option>
                                         @endforeach
                                     </select>
 
@@ -97,7 +105,8 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label for="image" class="col-md-4 col-form-label text-md-end">{{ __('shop.product.fields.image') }}</label>
+                                <label for="image"
+                                       class="col-md-4 col-form-label text-md-end">{{ __('shop.product.fields.image') }}</label>
 
                                 <div class="col-md-6">
                                     <input id="image" type="file"
@@ -114,8 +123,10 @@
                             <div class="row mb-3 d-flex justify-content-center">
                                 <div class="col-md-6">
                                     @if(!is_null($product->image_path))
-                                        <img src="{{ asset('storage/' . $product->image_path) }}" width="400"
-                                             height="400" alt="Zdjęcie produktu">
+                                        <a href="{{ route('products.downloadImage', $product->id) }}">
+                                            <img src="{{ asset('storage/' . $product->image_path) }}" width="400"
+                                                 height="400" alt="Zdjęcie produktu">
+                                        </a>
                                     @endif
                                 </div>
                             </div>

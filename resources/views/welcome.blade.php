@@ -36,10 +36,10 @@
                         </div>
                     </div>
 
-                    <div class="row" id="products-wrapper">
+                    <div class="row" id="products-wrapper" id="products-wrapper" data-guest-url="{{ $isGuest }}">
                         @foreach($products as $product)
                             <div class="col-6 col-md-6 col-lg-4 mb-3">
-                                <div class="card h-100 border-0">
+                                <div class="card h-100 border-0" id="cart-url" data-cart-url="{{ url('cart') }}">
                                     <div class="card-img-top">
                                         @if(!is_null($product->image_path))
                                         <img src="{{ asset('storage/' . $product->image_path) }}" class="img-fluid mx-auto d-block" alt="Product image">
@@ -49,13 +49,14 @@
                                     </div>
                                     <div class="card-body text-center">
                                         <h4 class="card-title">
-{{--                                            <a href="product.html" class=" font-weight-bold text-dark text-uppercase small">--}}
                                                 {{ $product->name }}
-{{--                                            </a>--}}
                                         </h4>
                                         <h5 class="card-price small">
                                             <i>{{ $product->price }} PLN</i>
                                         </h5>
+                                        <button class="btn btn-success btn-sm add-cart-button" data-id="{{ $product->id }}" @guest disabled @endguest>
+                                            <i class="fas fa-cart-plus"></i> Dodaj do koszyka
+                                        </button>
                                     </div>
                                 </div>
                             </div>

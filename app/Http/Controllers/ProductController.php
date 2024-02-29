@@ -8,9 +8,11 @@ use App\Models\ProductCategory;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ProductController extends Controller
 {
@@ -41,13 +43,13 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  UpsertProductRequest $request
+     * @param UpsertProductRequest $request
      * @return RedirectResponse
      */
     public function store(UpsertProductRequest $request): RedirectResponse
     {
         $product = new Product($request->validated());
-        if($request->hasFile('image')) {
+        if ($request->hasFile('image')) {
             $product->image_path = $request->file('image')->store('products');
         }
         $product->save();
@@ -57,7 +59,7 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  Product  $product
+     * @param Product $product
      * @return View
      */
     public function show(Product $product): View
@@ -70,7 +72,7 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  Product  $product
+     * @param Product $product
      * @return View
      */
     public function edit(Product $product): View
@@ -84,14 +86,18 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  UpsertProductRequest  $request
-     * @param  Product  $product
+     * @param UpsertProductRequest $request
+     * @param Product $product
      * @return RedirectResponse
      */
     public function update(UpsertProductRequest $request, Product $product): RedirectResponse
     {
+        $oldImagePath = $product->image_path;
         $product->fill($request->validated());
-        if($request->hasFile('image')) {
+        if ($request->hasFile('image')) {
+            if (Storage::exists($oldImagePath)) {
+                Storage::delete($oldImagePath);
+            }
             $product->image_path = $request->file('image')->store('products');
         }
         $product->save();
@@ -101,7 +107,7 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Product  $product
+     * @param Product $product
      * @return JsonResponse
      */
     public function destroy(Product $product): JsonResponse
@@ -118,5 +124,19 @@ class ProductController extends Controller
                 'message' => 'Wystąpił błąd!'
             ])->setStatusCode(500);
         }
+    }
+
+    /**
+     * Download image of the specified resource in storage.
+     *
+     * @param Product $product
+     * @return StreamedResponse|RedirectResponse
+     */
+    public function downloadImage(Product $product): StreamedResponse|RedirectResponse
+    {
+        if (Storage::exists($product->image_path)) {
+            return Storage::download($product->image_path);
+        }
+        return Redirect::back();
     }
 }
